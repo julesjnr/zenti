@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenti AI — Founder Outreach Toolkit</title>
+  <style>
+    :root {
+      --bg: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --tint: #EEF7F2;
+      --accent: #0D7A3E;
+      --accent-hover: #0A5F30;
+      --text-dark: #1C1C1A;
+      --text-muted: #5A5A56;
+      --border: #D8D6CF;
+      --amber-bg: #FFFDF5;
+      --amber-border: #F5A623;
+      --amber-text: #7F5000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(28, 28, 26, 0.03);
+    }
+
+    header {
+      border-b: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* Tabs Layout */
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      margin-bottom: 32px;
+      padding-bottom: 1px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-dark);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Tab Content Panels */
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Grid layouts */
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .panel-grid {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 20px 10px;
+      }
+      .container {
+        padding: 24px 16px;
+      }
+    }
+
+    /* Script Blocks */
+    .scripts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .script-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: rgba(247, 246, 242, 0.4);
+    }
+
+    .script-header {
+      background-color: var(--tint);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .script-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent);
+    }
+
+    .copy-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      background-color: var(--tint);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .script-body {
+      padding: 18px;
+    }
+
+    .script-subject {
+      font-family: monospace;
+      font-size: 12px;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+    }
+
+    .script-text {
+      white-space: pre-wrap;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* WhatsApp special bubbles */
+    .wa-bubble {
+      background-color: #E2F4C5;
+      color: #112D24;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13px;
+      max-width: 85%;
+      margin-left: 10px;
+      position: relative;
+    }
+
+    .wa-bubble::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 14px;
+      width: 0;
+      height: 0;
+      border-y: 8px solid transparent;
+      border-r: 10px solid #E2F4C5;
+    }
+
+    /* Advice columns */
+    .tip-box {
+      background-color: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-radius: 12px;
+      padding: 20px;
+      color: var(--amber-text);
+      font-size: 13px;
+      height: fit-content;
+    }
+
+    .tip-box h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tip-box ul {
+      list-style-type: disc;
+      padding-left: 18px;
+    }
+
+    .tip-box li {
+      margin-bottom: 10px;
+    }
+
+    /* Sector Grid */
+    .sector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .sector-card {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .sector-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(13, 122, 62, 0.05);
+    }
+
+    .sector-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .sector-icon {
+      font-size: 24px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+    }
+
+    .tag.high-pain { background: #FEF2F2; color: #991B1B; border-color: #FCA5A5; }
+    .tag.high-volume { background: #EFF6FF; color: #1E40AF; border-color: #93C5FD; }
+    .tag.high-value { background: #FAF5FF; color: #6B21A8; border-color: #D8B4FE; }
+    .tag.quick-win { background: #ECFDF5; color: #065F46; border-color: #6EE7B7; }
+    .tag.easy-sell { background: #FFFBEB; color: #92400E; border-color: #FCD34D; }
+
+    .sector-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .sector-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Sourcing layout */
+    .sourcing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .sourcing-card {
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .sourcing-card::after {
+      content: attr(data-index);
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 44px;
+      font-weight: 900;
+      color: #F0EDE6;
+      z-index: 1;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .sourcing-title {
+      font-size: 16px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--tint);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sourcing-steps {
+      list-style-type: decimal;
+      padding-left: 18px;
+      font-size: 12px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 2;
+    }
+
+    .sourcing-steps li {
+      margin-bottom: 8px;
+    }
+
+    .sourcing-tip {
+      background-color: var(--tint);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 14px;
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Zenti <span>AI</span> — Founder Outreach Toolkit</h1>
+      <div class="subtitle">Bespoke, high-converting outreach blueprints and targeting playbooks designed to close Nairobi SMEs.</div>
+    </header>
+
+    <!-- Tabs switcher -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('email')">✉️ Cold Email (3 Scripts)</button>
+      <button class="tab-btn" onclick="switchTab('whatsapp')">💬 WhatsApp (4 Scripts)</button>
+      <button class="tab-btn" onclick="switchTab('linkedin')">💼 LinkedIn (4 Scripts)</button>
+      <button class="tab-btn" onclick="switchTab('targets')">🎯 Target Businesses</button>
+      <button class="tab-btn" onclick="switchTab('sourcing')">🔍 Sourcing Leads</button>
+    </div>
+
+    <!-- TAB 1: COLD EMAIL -->
+    <div id="panel-email" class="tab-panel active">
+      <div class="panel-grid">
+        <div class="scripts-list">
+          
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">1. Initial Outreach Script</span>
+              <button class="copy-btn" onclick="copyScript('email-initial')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="script-subject"><strong>Subject:</strong> Quick question about [Business Name]'s operations</div>
+              <p class="script-text" id="email-initial">Hi [Founder Name],
+
+I’ve been following [Business Name] in Nairobi, and I love what you’re doing.
+
+Many Kenyan SMEs I talk to are losing 10+ hours a week matching M-Pesa payments, manually sending PDFs to clients on WhatsApp, or compiling daily reports.
+
+At Zenti AI, we build lightweight, custom AI automations that handle this repetitive work for you—without you changing how you run your business. Our custom bots can reconcile M-Pesa payments instantly, manage client requests on WhatsApp 24/7, and generate PDF invoices automatically.
+
+Would you be open to a brief, 20-minute intro call this Thursday or Friday to see how much manual work we can take off your plate?
+
+Best regards,
+
+[Your Name]
+Co-Founder, Zenti AI
+hello@zentiai.co | +254 XXX XXX XXX</p>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">2. Follow-Up Script (3 Days Later)</span>
+              <button class="copy-btn" onclick="copyScript('email-followup')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="script-subject"><strong>Subject:</strong> Re: [Business Name]'s operations / M-Pesa matching</div>
+              <p class="script-text" id="email-followup">Hi [Founder Name],
+
+I know you’re busy running [Business Name], so I’ll keep this short.
+
+Just to give you a concrete example: we recently helped a logistics hub in Nairobi automate their M-Pesa reconciliation. Instead of a manager spending 2 hours every evening matching transaction codes, an AI script now grabs the M-Pesa MPAN codes from their SMS/Daraja API and instantly marks invoices as paid in their sheet.
+
+We can set up something very similar for you within 14 days.
+
+Do you have 20 minutes for a quick chat this week? Let me know if Thursday at 11:00 AM or Friday at 2:00 PM works.
+
+Best,
+
+[Your Name]
+Zenti AI</p>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">3. Final Breakaway Script (5 Days Later)</span>
+              <button class="copy-btn" onclick="copyScript('email-breakaway')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="script-subject"><strong>Subject:</strong> One last thing regarding [Business Name]</div>
+              <p class="script-text" id="email-breakaway">Hi [Founder Name],
+
+I haven't heard back, so I assume automating your manual tasks isn't a priority right now. That is completely fine!
+
+If you ever change your mind and want to stop spending evenings on manual reports, M-Pesa matching, or copying customer details, we're here to help.
+
+I put together a free, one-page automation audit showing exactly which 3 tasks in your sector are easiest to automate first.
+
+If you'd like me to send that PDF over, just reply with "YES" and I'll drop it in your inbox. No calls needed.
+
+Wishing you all the best with [Business Name],
+
+[Your Name]
+Zenti AI</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tip-box">
+          <h4>💡 Cold Email Success Rules</h4>
+          <ul>
+            <li><strong>Personalize first line:</strong> Never send templates that say "Dear Director". Always look up their actual name.</li>
+            <li><strong>Sincerity sells:</strong> Keep sentences short and direct. Avoid overly complex technical buzzwords.</li>
+            <li><strong>Subject lines:</strong> Keep them lowercase and informal to mimic an email from an employee or colleague.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: WHATSAPP -->
+    <div id="panel-whatsapp" class="tab-panel">
+      <div class="panel-grid">
+        <div class="scripts-list">
+          
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">1. First Message (Cold)</span>
+              <button class="copy-btn" onclick="copyScript('wa-cold')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="wa-bubble">
+                <p class="script-text" id="wa-cold">Habari [Founder Name]! This is [Your Name] from Zenti AI here in Nairobi. I noticed [Business Name] has been growing fast! 🚀
+
+We build custom AI automations specifically for Kenyan SMEs to eliminate repetitive tasks. Things like:
+1. Auto-matching M-Pesa receipts
+2. WhatsApp customer service bots answering FAQs 24/7
+3. Generating daily PDF sales reports directly to your phone.
+
+Do you have 15 minutes for a quick WhatsApp call this Thursday to see if we can save your team 10+ hours a week?</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">2. When They Reply With Interest</span>
+              <button class="copy-btn" onclick="copyScript('wa-interest')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="wa-bubble">
+                <p class="script-text" id="wa-interest">Awesome! Thanks for reaching out, [Founder Name]. On our quick 15-minute call, I’ll show you:
+
+1. A live demo of our WhatsApp/M-Pesa integration in action.
+2. Exactly which of your manual tasks are costing you the most money.
+3. A step-by-step 14-day roadmap to go live.
+
+Does Thursday at 10:00 AM or Friday at 3:00 PM work better for you?</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">3. Follow-Up (No Reply after 2 Days)</span>
+              <button class="copy-btn" onclick="copyScript('wa-followup')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="wa-bubble">
+                <p class="script-text" id="wa-followup">Hi [Founder Name]! Hope your week is going well. I know you're busy running the business.
+
+To make it easy, instead of a call, would you prefer I send over a quick 2-minute screen recording showing how our M-Pesa and WhatsApp automation bot works? You can watch it whenever you have a minute. Let me know!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">4. If They Ask About Pricing</span>
+              <button class="copy-btn" onclick="copyScript('wa-pricing')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <div class="wa-bubble">
+                <p class="script-text" id="wa-pricing">Great question! Our pricing is highly accessible for Kenyan SMEs. We have standard packages starting at KES 15,000/month (Starter) and KES 35,000/month (Growth) which covers fully managed builds, hosting, and ongoing support.
+
+Most businesses save 10 to 15 hours of manual labor per week, meaning the system pays for itself in less than 4 weeks.
+
+Let’s book a quick 15-minute discovery call to see which tier fits [Business Name] best. Does tomorrow morning work?</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tip-box">
+          <h4>💡 WhatsApp Best Practices</h4>
+          <ul>
+            <li><strong>Wide spacing:</strong> Never send a solid brick of text. Split thoughts into 2-sentence paragraphs.</li>
+            <li><strong>Check badge:</strong> Look for a green or gray business profile icon. If it's a mobile Safaricom number, use Sheng if appropriate.</li>
+            <li><strong>Use voice notes:</strong> A 30-second casual voice recording works wonders. It breaks the cold barrier instantly.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: LINKEDIN -->
+    <div id="panel-linkedin" class="tab-panel">
+      <div class="panel-grid">
+        <div class="scripts-list">
+          
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">1. Connection Note (Strictly under 300 chars)</span>
+              <button class="copy-btn" onclick="copyScript('li-note')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <p class="script-text" id="li-note">Hi [Founder Name], love your work at [Business Name] in Nairobi. We build custom AI automations (M-Pesa matching, WhatsApp bots, automated invoicing) for Kenyan SMEs to eliminate repetitive work. Would love to connect and share some local automation blueprints!</p>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">2. Follow-Up Message (After Connecting)</span>
+              <button class="copy-btn" onclick="copyScript('li-followup')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <p class="script-text" id="li-followup">Hi [Founder Name], thanks for connecting!
+
+Many founders I talk to in Nairobi are swamped with admin work—matching M-Pesa transaction SMS texts, sending manual WhatsApp receipts, or updating Excel sheets late at night.
+
+At Zenti AI, we build custom solutions starting at KES 15k/mo that run in the background. We handle the design, setup, and continuous maintenance so you don't need any tech skills.
+
+Are you open to a brief 20-minute call this Thursday or Friday to find out how much time we can save your team?</p>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">3. LinkedIn Post (Pain List Format)</span>
+              <button class="copy-btn" onclick="copyScript('li-post1')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <p class="script-text" id="li-post1">Nairobi founders: Stop doing work a machine can do for you. 🇰🇪
+
+If you or your team are still doing any of these daily, you are burning valuable hours:
+
+❌ Copy-pasting M-Pesa transaction codes to match orders
+❌ Manually typing "Habari, yes we are open" on WhatsApp 50 times a day
+❌ Copying customer details from WhatsApp into an Excel invoice sheet
+❌ Checking inventory manually and sending frantic WhatsApp messages when stock is low
+❌ Generating end-of-day reports in Excel by hand
+
+These aren't "jobs." They are tasks. And they can be automated in under 14 days for less than the cost of a part-time intern.
+
+At Zenti AI, we build custom background workflows that connect M-Pesa, WhatsApp, and Google Sheets so your business runs on autopilot.
+
+Want to see a free 2-minute demo of how it works?
+
+👇 Comment "AUTOMATE" below or send me a DM and I’ll drop it in your inbox.</p>
+            </div>
+          </div>
+
+          <div class="script-card">
+            <div class="script-header">
+              <span class="script-title">4. LinkedIn Post (Social Proof Story)</span>
+              <button class="copy-btn" onclick="copyScript('li-post2')">Copy Script</button>
+            </div>
+            <div class="script-body">
+              <p class="script-text" id="li-post2">A retail store owner in Westlands, Nairobi was spending 2 hours every single evening doing "The Reconciliation Dance." 💃❌
+
+He would:
+1. Open his phone M-Pesa messages.
+2. Open his Google Sheet of orders.
+3. Match transaction codes one-by-one.
+4. Mark them as "Paid".
+5. Generate a manual invoice PDF.
+6. Search for the customer's WhatsApp chat and send the PDF.
+
+This is a recipe for burnout. It’s also where errors happen—missing payments, double-shipping, or delaying orders.
+
+We built a simple AI automation for him:
+🚀 Customer pays via M-Pesa
+🚀 Instant Daraja notification matches the order ID in Google Sheets automatically
+🚀 A PDF receipt is generated on the fly
+🚀 A WhatsApp bot instantly delivers the receipt with a warm "Asante" message
+
+Total time spent by the owner? Zero minutes.
+Total cost? KES 15,000/month.
+Hours saved? 14 hours every single week.
+
+Stop doing manual copy-paste work. Your team deserves better.
+
+DM us "DEMO" and let's get your Nairobi SME running on autopilot. 🇰🇪
+
+#NairobiSMEs #BusinessAutomation #Mpesa #ZentiAI</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="tip-box">
+          <h4>💡 LinkedIn Strategy</h4>
+          <ul>
+            <li><strong>Headline optimization:</strong> Make sure your personal profile headline states exactly who you help. E.g. "I help Nairobi SMEs automate payments and WhatsApp."</li>
+            <li><strong>No sales pitch in note:</strong> The 300-char note is only to connect, not to close a sale. Keep it about swapping ideas.</li>
+            <li><strong>CTA Comment Triggers:</strong> Tell them to reply "AUTOMATE" in comments. The LinkedIn algorithm loves comment volume and will boost your post reach.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TARGET SECTORS -->
+    <div id="panel-targets" class="tab-panel">
+      <div class="sector-grid">
+        
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🩺</span>
+            <span class="tag high-pain">High Pain</span>
+          </div>
+          <div>
+            <div class="sector-name">Clinics & Pharmacies</div>
+            <p class="sector-desc">Manual patient booking, checking doctor schedules, and manually WhatsApping appointment reminders or test results.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🛍️</span>
+            <span class="tag high-volume">High Volume</span>
+          </div>
+          <div>
+            <div class="sector-name">Retail & Supermarkets</div>
+            <p class="sector-desc">Manually reconciling multiple Till/Paybill numbers, low stock alerts, and copying orders from WhatsApp into Excel.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🏠</span>
+            <span class="tag high-value">High Value</span>
+          </div>
+          <div>
+            <div class="sector-name">Property Managers</div>
+            <p class="sector-desc">Matching rent payments on M-Pesa, sending automated monthly rent receipts, and dispatching maintenance text alerts.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🚚</span>
+            <span class="tag quick-win">Quick Win</span>
+          </div>
+          <div>
+            <div class="sector-name">Logistics & Courier</div>
+            <p class="sector-desc">Client booking via WhatsApp, automated dispatch notifications, rider trip assignment alerts, and PDF waybill generation.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🎓</span>
+            <span class="tag high-value">High Value</span>
+          </div>
+          <div>
+            <div class="sector-name">Schools & Colleges</div>
+            <p class="sector-desc">Automating termly fee reminder notifications, matching bank/M-Pesa school fees payments, and sending report cards.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🍽️</span>
+            <span class="tag easy-sell">Easy Sell</span>
+          </div>
+          <div>
+            <div class="sector-name">Restaurants & Hotels</div>
+            <p class="sector-desc">WhatsApp-based table/food ordering, feedback collection, automated chef order slips, and supplier stock alerts.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🪙</span>
+            <span class="tag high-value">High Value</span>
+          </div>
+          <div>
+            <div class="sector-name">SACCOs & Microfinance</div>
+            <p class="sector-desc">Automating loan repayment reminders, member balance checking via SMS bots, and weekly spreadsheet report compilation.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">✂️</span>
+            <span class="tag easy-sell">Easy Sell</span>
+          </div>
+          <div>
+            <div class="sector-name">Beauty Salons & Spas</div>
+            <p class="sector-desc">Manually booking appointments, sending automated WhatsApp reminders 2 hours before, and managing stylist commissions.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">🛠️</span>
+            <span class="tag high-pain">High Pain</span>
+          </div>
+          <div>
+            <div class="sector-name">Construction Contractors</div>
+            <p class="sector-desc">Tracking material deliveries, compiling field worker timesheets, and generating instant client quote PDFs from simple inputs.</p>
+          </div>
+        </div>
+
+        <div class="sector-card">
+          <div class="sector-header">
+            <span class="sector-icon">💼</span>
+            <span class="tag quick-win">Quick Win</span>
+          </div>
+          <div>
+            <div class="sector-name">Wholesalers & Distributors</div>
+            <p class="sector-desc">Handling massive WhatsApp orders, verifying bulk M-Pesa transactions, and auto-notifying delivery drivers of new routes.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 5: WHERE TO FIND THEM -->
+    <div id="panel-sourcing" class="tab-panel">
+      <div class="sourcing-grid">
+        
+        <div class="sourcing-card" data-index="01">
+          <div class="sourcing-title">Google Maps Sourcing</div>
+          <ol class="sourcing-steps">
+            <li>Search: "[Category] in [Nairobi Area]" (e.g. "Clinics in Westlands", "Pharmacies in Kilimani").</li>
+            <li>Filter for businesses with active profiles but basic websites or no digital tools.</li>
+            <li>Look for Safaricom mobile numbers listed (+254 7... or +254 1...).</li>
+            <li>Save the numbers, check if they are WhatsApp-enabled, and log the owner name.</li>
+          </ol>
+          <div class="sourcing-tip"><strong>Target:</strong> Mid-sized local businesses, avoid major multinational chains.</div>
+        </div>
+
+        <div class="sourcing-card" data-index="02">
+          <div class="sourcing-title">LinkedIn Prospecting</div>
+          <ol class="sourcing-steps">
+            <li>Search filters: Job Title: "Owner" / "Founder" AND Location: "Nairobi".</li>
+            <li>Add industry filters like Retail, Real Estate, Logistics, or Hospitality.</li>
+            <li>Send 10–15 customized connection requests every single day.</li>
+            <li>Use our Connection Note, then follow up with our LinkedIn scripts.</li>
+          </ol>
+          <div class="sourcing-tip"><strong>Tip:</strong> Keep your personal profile fully updated with an automation-focused headline.</div>
+        </div>
+
+        <div class="sourcing-card" data-index="03">
+          <div class="sourcing-title">Kenya Yellow Pages</div>
+          <ol class="sourcing-steps">
+            <li>Visit yellowpageskenya.com or kenyabiz.com.</li>
+            <li>Search by local category (wholesalers, SACCOs, logistics, property management).</li>
+            <li>Extract their contact numbers and official general inquiry emails.</li>
+            <li>Send our Cold Email Script, tracking signups in your CRM spreadsheet.</li>
+          </ol>
+          <div class="sourcing-tip"><strong>Tip:</strong> Always prioritize calling their Safaricom numbers over general email.</div>
+        </div>
+
+        <div class="sourcing-card" data-index="04">
+          <div class="sourcing-title">Social Business Groups</div>
+          <ol class="sourcing-steps">
+            <li>Join Facebook groups: "Nairobi Business Circle", "Kenyan Entrepreneurs", etc.</li>
+            <li>Monitor posts for people complaining about Excel formulas or invoicing errors.</li>
+            <li>Post helpful answers first, explaining how background scripts work.</li>
+            <li>End with: "I built a free checklist on how to automate this, send me a DM."</li>
+          </ol>
+          <div class="sourcing-tip"><strong>Rule:</strong> Education always beats cold sales pitching in online groups.</div>
+        </div>
+
+        <div class="sourcing-card" data-index="05">
+          <div class="sourcing-title">Your Warm Circle</div>
+          <ol class="sourcing-steps">
+            <li>Review your contact book for friends owning local businesses in Nairobi.</li>
+            <li>Send a friendly WhatsApp letting them know you built an automation service.</li>
+            <li>Offer them or their referrals a free 20-minute operational blueprint.</li>
+            <li>Reward referrals with a 20% cash commission on the first month setup fee.</li>
+          </ol>
+          <div class="sourcing-tip"><strong>Fact:</strong> Your first 3 agency sales will almost always come from referrals.</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      // Hide all panels
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      // Remove active button styling
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Show current panel and style button
+      document.getElementById('panel-' + tabId).classList.add('active');
+      
+      // Find current clicked button and mark active
+      event.currentTarget.classList.add('active');
+    }
+
+    function copyScript(elementId) {
+      var copyText = document.getElementById(elementId).innerText;
+      var btn = event.currentTarget;
+      
+      navigator.clipboard.writeText(copyText).then(function() {
+        btn.innerText = "✓ Copied";
+        btn.classList.add('copied');
+        
+        setTimeout(function() {
+          btn.innerText = "Copy Script";
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

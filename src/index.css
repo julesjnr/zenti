@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom colors matching the Zenti AI design direction, bound to CSS variables */
+  --color-zenti-bg: var(--zenti-bg);
+  --color-zenti-surface: var(--zenti-surface);
+  --color-zenti-tint: var(--zenti-tint);
+  --color-zenti-accent: var(--zenti-accent);
+  --color-zenti-glow: var(--zenti-glow);
+  --color-zenti-text-dark: var(--zenti-text-dark);
+  --color-zenti-text-muted: var(--zenti-text-muted);
+  --color-zenti-border: var(--zenti-border);
+}
+
+:root {
+  --zenti-bg: #080A10;       /* Default premium dark slate bg */
+  --zenti-surface: #111422;  /* Default dark card background */
+  --zenti-tint: rgba(13, 122, 62, 0.15); /* Default green glow tint */
+  --zenti-accent: #0D7A3E;   /* Default Kenyan green */
+  --zenti-glow: rgba(13, 122, 62, 0.4);
+  --zenti-text-dark: #F3F4F6; /* Default white text */
+  --zenti-text-muted: #9CA3AF; /* Default muted silver text */
+  --zenti-border: #1F2437;   /* Default dark border */
+}
+
+/* Custom scrollbar to keep layout premium */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--zenti-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--zenti-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zenti-accent);
+}

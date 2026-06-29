@@ -1,0 +1,6 @@
+{
+  "name": "Zenti AI - AI Automation Agency",
+  "description": "High-converting landing page and sales toolkit for Zenti AI, a bespoke AI automation agency in Nairobi, Kenya, helping SMEs automate manual workflows.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

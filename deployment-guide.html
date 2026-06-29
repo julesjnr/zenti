@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenti AI — Launch & Deployment Guide</title>
+  <style>
+    :root {
+      --bg: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --tint: #EEF7F2;
+      --accent: #0D7A3E;
+      --accent-hover: #0A5F30;
+      --text-dark: #1C1C1A;
+      --text-muted: #5A5A56;
+      --border: #D8D6CF;
+      --purple-tint: #F3E8FF;
+      --purple-accent: #6B21A8;
+      --blue-tint: #EFF6FF;
+      --blue-accent: #1E40AF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(28, 28, 26, 0.03);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .progress-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-text {
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .progress-track {
+      width: 100px;
+      height: 6px;
+      background-color: #E2DFD8;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--accent);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* Steps and Timeline layout */
+    .phase-section {
+      margin-bottom: 40px;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .phase-icon {
+      font-size: 20px;
+      padding: 6px;
+      border-radius: 8px;
+    }
+
+    .p-green { background-color: var(--tint); color: var(--accent); }
+    .p-blue { background-color: var(--blue-tint); color: var(--blue-accent); }
+    .p-purple { background-color: var(--purple-tint); color: var(--purple-accent); }
+    .p-emerald { background-color: #ECFDF5; color: #047857; }
+
+    .phase-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-left: 10px;
+    }
+
+    .step-label {
+      display: flex;
+      align-items: start;
+      gap: 16px;
+      background-color: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .step-label:hover {
+      border-color: #9CA3AF;
+    }
+
+    .step-label input {
+      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .step-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .step-title span {
+      color: var(--accent);
+      font-family: monospace;
+      margin-right: 6px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .step-label.checked {
+      background-color: rgba(238, 247, 242, 0.4);
+      border-color: var(--accent);
+    }
+
+    .step-label.checked .step-title, 
+    .step-label.checked .step-desc {
+      opacity: 0.6;
+    }
+
+    /* Final Black Card */
+    .summary-card {
+      background-color: #1C1C1A;
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background-color: var(--accent);
+      opacity: 0.1;
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #2A2A26;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .summary-header h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #10B981;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      font-size: 12px;
+      color: #D1D5DB;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: start;
+      gap: 8px;
+    }
+
+    .summary-item strong {
+      color: #FFFFFF;
+    }
+
+    .domain-tip-box {
+      background-color: #2A2A26;
+      border: 1px solid #3E3E3A;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 11px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .domain-tip-box strong {
+      color: #FFFFFF;
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div>
+        <h1>Zenti <span>AI</span> — Deployment Manual</h1>
+        <div class="subtitle">Complete 12-step playbook to deploy waitlist systems and connect sheets.</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-text">
+          <span id="completed-count">0</span>/12 Done
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill-bar"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PHASE 1 -->
+    <div class="phase-section">
+      <div class="phase-header">
+        <span class="phase-icon p-green">🗄️</span>
+        <h3 class="phase-title">Phase 1 — Google Sheets Backend Setup</h3>
+      </div>
+      <div class="steps-list">
+        
+        <label class="step-label" onclick="toggleStep(1, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 1:</span> Create a new Google Sheet</h4>
+            <p class="step-desc">Open sheets.google.com or type sheet.new in your web browser. Give your sheet a clean name like "Zenti AI Signups" or "Nairobi SME Waitlist".</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(2, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 2:</span> Open Apps Script editor</h4>
+            <p class="step-desc">In the Google Sheet top file menu, click Extensions > Apps Script. This launches the serverless JavaScript console directly tied to your sheet.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(3, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 3:</span> Paste code from waitlist-backend.gs</h4>
+            <p class="step-desc">Delete any boilerplate code like function myFunction() {} inside Code.gs. Copy the entire contents of waitlist-backend.gs from your workspace and paste them here. Save your file.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(4, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 4:</span> Deploy as serverless Web App</h4>
+            <p class="step-desc">Click Deploy (top right) > New deployment. Under Select type, choose Web app. Set Execute as to "Me (your email)" and set Who has access to "Anyone" so the landing page can sync securely without logging in.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(5, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 5:</span> Copy Web App Endpoint URL</h4>
+            <p class="step-desc">Click Deploy, approve the standard Google authorization access screens, and copy the final generated Web App URL showing in your console.</p>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-section">
+      <div class="phase-header">
+        <span class="phase-icon p-blue">🔗</span>
+        <h3 class="phase-title">Phase 2 — Connect Webhook to Landing Page</h3>
+      </div>
+      <div class="steps-list">
+        
+        <label class="step-label" onclick="toggleStep(6, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 6:</span> Place URL inside App.tsx / index.html</h4>
+            <p class="step-desc">Open App.tsx (or index.html if deploying standalone) in your editor. Locate the webhook URL config box in the founder workspace (or search for local storage constants) and save your Copied Apps Script Web App URL.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(7, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 7:</span> Test the local form submission</h4>
+            <p class="step-desc">Go to the client preview. Submit a test email address (e.g., test-lead@zentiai.co). Verify that the success message displays, and check your Google Sheet. It should have immediately logged a row with an Africa/Nairobi EAT timestamp.</p>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-section">
+      <div class="phase-header">
+        <span class="phase-icon p-purple">🌍</span>
+        <h3 class="phase-title">Phase 3 — Deploy on Netlify (Or Vercel)</h3>
+      </div>
+      <div class="steps-list">
+        
+        <label class="step-label" onclick="toggleStep(8, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 8:</span> Create a free Netlify account</h4>
+            <p class="step-desc">Visit netlify.com and sign up for a free developer account using your GitHub or standard email address.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(9, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 9:</span> Compile and Drag 'dist' folder to deploy</h4>
+            <p class="step-desc">Compile your React code (npm run build generates a dist folder). Simply drag the entire dist folder directly into Vercel/Netlify's quick drag-and-drop dashboard to put your site live instantly.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(10, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 10:</span> Add your custom Kenyan Domain</h4>
+            <p class="step-desc">Purchase a local domain like zentiai.co or zentiai.co.ke from licensed local registrars like Kenic, Hostpins, or namecheap. Point your domain DNS records to Netlify's name servers to enable fast, free SSL HTTPS encryption.</p>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase-section">
+      <div class="phase-header">
+        <span class="phase-icon p-emerald">✅</span>
+        <h3 class="phase-title">Phase 4 — Verify Live Web Integration</h3>
+      </div>
+      <div class="steps-list">
+        
+        <label class="step-label" onclick="toggleStep(11, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 11:</span> Submit a live production lead</h4>
+            <p class="step-desc">Navigate to your finished custom production domain (e.g. https://zentiai.co) inside an incognito tab. Submit a real email and ensure the success banner appears.</p>
+          </div>
+        </label>
+
+        <label class="step-label" onclick="toggleStep(12, this)">
+          <input type="checkbox">
+          <div class="step-details">
+            <h4 class="step-title"><span>Step 12:</span> Confirm Sheets record log</h4>
+            <p class="step-desc">Open your Google Sheet. Confirm that the test row was logged instantly, matching ID, EAT timestamp, and form position source. Your automated waitlist database is fully live!</p>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- Black Summary Card -->
+    <div class="summary-card">
+      <div class="summary-header">
+        <h4>✔️ Launch Architecture Summary</h4>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <p><strong>Public Site:</strong> Live on Vercel/Netlify global servers</p>
+        </div>
+        <div class="summary-item">
+          <p><strong>Lead DB:</strong> Synced Google Sheet Webhook</p>
+        </div>
+        <div class="summary-item">
+          <p><strong>Offline Assets:</strong> Playbook and Outreach Toolkit open locally</p>
+        </div>
+        <div class="summary-item">
+          <p><strong>Total Launch Cost:</strong> <span style="color: #10B981; font-weight: bold; font-family: monospace;">KES 0.00</span></p>
+        </div>
+      </div>
+
+      <div class="domain-tip-box">
+        <div style="font-size: 16px;">💡</div>
+        <div>
+          <strong>SME Credibility Tip:</strong>
+          <p style="color: #9CA3AF; margin-top: 2px;">While free subdomains are fine for testing, spending roughly <strong>KES 1,500/year</strong> to purchase a bespoke local <strong>.co.ke</strong> domain from accredited registrars establishes instant corporate trust with local clinic, retail, and real estate owners.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var completed = [];
+
+    function toggleStep(num, label) {
+      // Find checkbox
+      var chk = label.querySelector('input');
+      
+      // Stop recursion when label is clicked (since checking checkbox triggers label click)
+      if (event.target !== chk) {
+        chk.checked = !chk.checked;
+      }
+
+      if (chk.checked) {
+        label.classList.add('checked');
+        if (!completed.includes(num)) {
+          completed.push(num);
+        }
+      } else {
+        label.classList.remove('checked');
+        completed = completed.filter(s => s !== num);
+      }
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      var bar = document.getElementById('progress-fill-bar');
+      var txt = document.getElementById('completed-count');
+      
+      var count = completed.length;
+      txt.innerText = count;
+      
+      var percent = Math.round((count / 12) * 100);
+      bar.style.width = percent + '%';
+    }
+  </script>
+</body>
+</html>

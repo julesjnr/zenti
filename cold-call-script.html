@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenti AI — Interactive Sales Playbook</title>
+  <style>
+    :root {
+      --bg: #F7F6F2;
+      --card-bg: #FFFFFF;
+      --tint: #EEF7F2;
+      --accent: #0D7A3E;
+      --accent-hover: #0A5F30;
+      --text-dark: #1C1C1A;
+      --text-muted: #5A5A56;
+      --border: #D8D6CF;
+      --amber-bg: #FFFDF5;
+      --amber-border: #F5A623;
+      --amber-text: #7F5000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(28, 28, 26, 0.03);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .status-badge {
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background-color: var(--tint);
+      color: var(--accent);
+      border: 1px solid rgba(13, 122, 62, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* Progress pills */
+    .progress-container {
+      margin-bottom: 32px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .pill {
+      height: 10px;
+      background-color: #E2DFD8;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill.completed {
+      background-color: var(--tint);
+      border: 1px solid rgba(13, 122, 62, 0.2);
+    }
+
+    .pill.active {
+      background-color: var(--accent);
+    }
+
+    /* Main Playbook Window */
+    .playbook-window {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background-color: rgba(247, 246, 242, 0.3);
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .window-header {
+      background-color: var(--tint);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .window-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-number {
+      background-color: var(--accent);
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .window-body {
+      padding: 24px;
+      flex-grow: 1;
+    }
+
+    .window-footer {
+      background-color: var(--card-bg);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background-color: #F7F6F2;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.next {
+      background-color: var(--accent);
+      color: white;
+      border-color: transparent;
+    }
+
+    .nav-btn.next:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+
+    /* Steps specifics styling */
+    .step-panel {
+      display: none;
+    }
+
+    .step-panel.active {
+      display: block;
+    }
+
+    .script-quote {
+      border-left: 4px solid var(--accent);
+      background-color: #FFFFFF;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding: 18px;
+      font-size: 15px;
+      font-style: italic;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      white-space: pre-wrap;
+    }
+
+    .info-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Hook selectors */
+    .selectors {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .selector-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .selector-btn.active {
+      background-color: var(--accent);
+      color: white;
+      border-color: transparent;
+    }
+
+    /* Discovery layout */
+    .discovery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .discovery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .question-card {
+      background-color: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 12px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .question-num {
+      color: var(--accent);
+      font-weight: bold;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    /* Objections collapses */
+    .collapses {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .collapse-item {
+      border: 1px solid var(--border);
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .collapse-header {
+      background-color: rgba(238, 247, 242, 0.3);
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .collapse-header:hover {
+      background-color: var(--tint);
+    }
+
+    .collapse-body {
+      padding: 16px;
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      display: none;
+      background-color: var(--amber-bg);
+      white-space: pre-wrap;
+    }
+
+    .whatsapp-dark-box {
+      background-color: #1C1C1A;
+      color: #FFFFFF;
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .whatsapp-dark-box pre {
+      white-space: pre-wrap;
+      font-family: inherit;
+      font-size: 12px;
+      margin-top: 8px;
+      color: #D1D5DB;
+    }
+
+    /* STEP 7 Checklist & counters */
+    .step-grid-split {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .step-grid-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .check-label {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      background-color: white;
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .check-label input {
+      margin-top: 3px;
+    }
+
+    .check-label.checked {
+      text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .stats-card {
+      background-color: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--tint);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stats-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .reset-btn {
+      color: #DC2626;
+      background: none;
+      border: none;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .counter-box {
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 90px;
+    }
+
+    .counter-box.featured {
+      background-color: var(--tint);
+      border-color: rgba(13, 122, 62, 0.2);
+    }
+
+    .counter-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .counter-value {
+      font-size: 20px;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    .counter-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .ctrl-btn {
+      background-color: white;
+      border: 1px solid var(--border);
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ctrl-btn:hover {
+      background-color: #F7F6F2;
+    }
+
+    /* Warning advisory */
+    .advisory {
+      background-color: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-radius: 12px;
+      padding: 16px;
+      color: var(--amber-text);
+      font-size: 12px;
+      display: flex;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div>
+        <h1>Zenti <span>AI</span> — Interactive Sales Playbook</h1>
+        <div class="subtitle">Real-time phone pipeline helper and local call-log tracker.</div>
+      </div>
+      <div class="status-badge">📞 Cold calling engine</div>
+    </header>
+
+    <!-- Progress steps -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <span>Conversation Roadmap</span>
+        <span id="current-step-label">Step 1 of 7 — Opening</span>
+      </div>
+      <div class="progress-bar">
+        <button class="pill active" onclick="jumpToStep(1)"></button>
+        <button class="pill" onclick="jumpToStep(2)"></button>
+        <button class="pill" onclick="jumpToStep(3)"></button>
+        <button class="pill" onclick="jumpToStep(4)"></button>
+        <button class="pill" onclick="jumpToStep(5)"></button>
+        <button class="pill" onclick="jumpToStep(6)"></button>
+        <button class="pill" onclick="jumpToStep(7)"></button>
+      </div>
+    </div>
+
+    <!-- Active Window -->
+    <div class="playbook-window">
+      
+      <!-- Top banner of step -->
+      <div class="window-header">
+        <div class="window-title">
+          <span class="step-number" id="step-id-badge">1</span>
+          <span id="step-title-text">Opening Script</span>
+        </div>
+        <span style="font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--text-muted); font-family: monospace;">Zenti Sales Flow</span>
+      </div>
+
+      <!-- Main Body text -->
+      <div class="window-body">
+
+        <!-- STEP 1 PANEL -->
+        <div class="step-panel active" id="step-1">
+          <span class="info-label">Admit this is a cold call. Honesty immediately disarms local founders:</span>
+          <div class="script-quote">“Habari [Prospect Name]! This is [Your Name] calling from Zenti AI here in Nairobi.
+
+I’ll be completely honest with you—this is a cold call. I know you’re incredibly busy running the operations, but I was hoping you could give me just 60 seconds to tell you why I called, and you can decide if it’s worth continuing?”</div>
+          
+          <span class="info-label">If they say: "I'm busy / call back later"</span>
+          <div style="font-size: 12px; font-style: italic; background-color: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 8px; padding: 12px; color: var(--amber-text);">
+            “I completely respect that, [Name]. I don’t want to interrupt your day. Would it be better if I called you back tomorrow morning at 9:30 AM, or is Wednesday afternoon around 3:00 PM more convenient for a quick 2-minute chat?”
+          </div>
+        </div>
+
+        <!-- STEP 2 PANEL -->
+        <div class="step-panel" id="step-2">
+          <span class="info-label">Select their industry sector to adjust the pitch-hook statement:</span>
+          <div class="selectors">
+            <button class="selector-btn active" onclick="selectHook('clinics', this)">Clinics & Pharmacies</button>
+            <button class="selector-btn" onclick="selectHook('retail', this)">Retailers & Supermarkets</button>
+            <button class="selector-btn" onclick="selectHook('property', this)">Property Managers</button>
+            <button class="selector-btn" onclick="selectHook('restaurant', this)">Restaurants & Hotels</button>
+            <button class="selector-btn" onclick="selectHook('general', this)">General SME / Logistics</button>
+          </div>
+
+          <span class="info-label">Your Hook Statement:</span>
+          <div class="script-quote" id="hook-quote-text">“We find that many private clinics in Nairobi are losing hours having their front desk manually text patients appointment reminders, manually cross-check doctor calendars, and match M-Pesa receipts for consults. Is that a challenge you guys face at your practice?”</div>
+        </div>
+
+        <!-- STEP 3 PANEL -->
+        <div class="step-panel" id="step-3">
+          <span class="info-label">Ask open-ended discovery questions to uncover manual bottlenecks:</span>
+          <div class="discovery-grid">
+            <div class="question-card">
+              <span class="question-num">Q1</span>
+              <p>“What does your Monday morning look like? What are the manual spreadsheet or reporting tasks that eat up your team's first 3 hours of the week?”</p>
+            </div>
+            <div class="question-card">
+              <span class="question-num">Q2</span>
+              <p>“If there's one repetitive manual task that you absolutely dread doing or managing every day, what would that be?”</p>
+            </div>
+            <div class="question-card">
+              <span class="question-num">Q3</span>
+              <p>“How is your team currently handling M-Pesa reconciliations and sending invoices? Are they typing them out or copy-pasting codes?”</p>
+            </div>
+            <div class="question-card">
+              <span class="question-num">Q4</span>
+              <p>“Has anything ever slipped through the cracks? Like a payment that didn't get recorded, a customer message that went unanswered for 6 hours, or an order that was double-shipped?”</p>
+            </div>
+          </div>
+
+          <span class="info-label">Smooth transition into the pitch:</span>
+          <div style="font-size: 12px; font-weight: bold; background-color: var(--tint); border: 1px solid rgba(13, 122, 62, 0.2); border-radius: 8px; padding: 12px; color: var(--accent); font-style: italic;">
+            “Got it. That makes perfect sense, and honestly, you’re not alone. Most Nairobi businesses are running into these exact bottleneck roadblocks. Here's how we solve that at Zenti AI...”
+          </div>
+        </div>
+
+        <!-- STEP 4 PANEL -->
+        <div class="step-panel" id="step-4">
+          <span class="info-label">Select sector specific solution description:</span>
+          <div class="selectors">
+            <button class="selector-btn active" onclick="selectPitch('general-p', this)">General 2-Min Pitch</button>
+            <button class="selector-btn" onclick="selectPitch('property-p', this)">Property managers</button>
+            <button class="selector-btn" onclick="selectPitch('clinics-p', this)">Clinics & Pharmacies</button>
+            <button class="selector-btn" onclick="selectPitch('retail-p', this)">Retailers & Supermarkets</button>
+            <button class="selector-btn" onclick="selectPitch('restaurant-p', this)">Restaurants & Hotels</button>
+          </div>
+
+          <span class="info-label">The Core Pitch:</span>
+          <div class="script-quote" id="pitch-quote-text">“We don't sell generic software that you have to learn. Instead, we build custom background scripts and WhatsApp bots tailored specifically to your business. We connect your existing tools—like your M-Pesa Paybill, your Google Sheets, and your WhatsApp Business. 
+
+For example, instead of your staff matching M-Pesa codes, our system automatically detects the transaction, updates your spreadsheet in real-time, generates a PDF receipt, and WhatsApps it to the customer instantly. You change absolutely nothing about how you work, and the automation runs 24/7 in the background for KES 15,000 a month.”</div>
+        </div>
+
+        <!-- STEP 5 PANEL -->
+        <div class="step-panel" id="step-5">
+          <span class="info-label">Click objection row to view word-for-word response script:</span>
+          <div class="collapses">
+            
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;Not interested.&quot; <span>▼</span></div>
+              <div class="collapse-body">“I completely understand, [Name]. Just so I know, is it because you already have your systems fully automated, or is saving time not a major priority for your business right now?”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;Too expensive / No budget.&quot; <span>▼</span></div>
+              <div class="collapse-body">“I hear you. KES 15,000 a month is a real expense. But if you think about it, it's less than the salary of a part-time intern. If our automation saves your manager just 10 hours a week, that’s 40 hours of manual labor saved a month. The system usually pays for itself in the first 2 weeks. Plus, we handle the setup, maintenance, and host everything—meaning you have no overhead.”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;We already use an ERP / specialized CRM.&quot; <span>▼</span></div>
+              <div class="collapse-body">“That’s excellent! It means you already value structure. We don’t replace your ERP. Most ERPs are terrible at connecting to local Kenyan tools like M-Pesa or WhatsApp. We build the lightweight bridges that sit in between your ERP and your daily workflows—filling the manual gaps so you don’t have to copy-paste data in and out of your software.”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;I don't have time right now.&quot; <span>▼</span></div>
+              <div class="collapse-body">“I hear you, you’re busy running the business. That’s actually why we’re calling. We only need 20 minutes to show you how to buy back 10 hours of your weekly schedule. We do 100% of the build and maintenance ourselves—you don't have to lift a finger. Would this Thursday morning at 10:00 AM work, or is Friday afternoon around 3:00 PM easier?”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;My staff won't adapt to AI.&quot; <span>▼</span></div>
+              <div class="collapse-body">“That’s the beauty of our custom builds: your team doesn’t have to learn a single new app or software. We build the automations to run in the background. If they are used to Google Sheets and WhatsApp, they continue using exactly those. They’ll just notice that the manual copy-pasting, matching, and messaging has magically stopped. We also provide a free 1-hour training session with your staff to make sure they are comfortable.”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;Tried this before, it didn't work.&quot; <span>▼</span></div>
+              <div class="collapse-body">“I am really sorry to hear that. Often, developers build a tool, hand it over, and walk away—leaving you stranded when things break. At Zenti AI, we operate as a managed service. We don't just build it; we host it, monitor it, and adapt it as your business changes. You have a direct Safaricom phone number to call whenever you need an update. If it doesn't work, we don't get paid.”</div>
+            </div>
+
+            <div class="collapse-item">
+              <div class="collapse-header" onclick="toggleCollapse(this)">Objection: &quot;Send me a PDF first.&quot; <span>▼</span></div>
+              <div class="collapse-body">“I’d be happy to email you a PDF! But because we build custom workflows, a generic PDF won't show you much. Let me ask you one quick question: what is the single biggest manual task your team spends time on every week? If you tell me, I can write a short, 3-sentence custom blueprint for you, email it over, and we can catch up for 10 minutes on Friday to discuss it. How does that sound?”</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- STEP 6 PANEL -->
+        <div class="step-panel" id="step-6">
+          <span class="info-label">Close on booking a 20-minute Zoom call for a free custom blueprint audit:</span>
+          <div class="script-quote">“Based on what you've shared, I'm confident we can save you at least 12 hours a week. Let’s do this: we have a 20-minute slot open on Thursday at 10:30 AM or Friday at 2:00 PM. We'll hop on a quick Zoom call, and I’ll sketch out a live, 3-step automation blueprint for your business—absolutely free. Which of those two times works best for you?”</div>
+
+          <span class="info-label">Secure confirmation details:</span>
+          <div style="font-size: 12px; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background-color: var(--tint); color: var(--accent); font-style: italic;">
+            “Perfect. I’ve booked you for Thursday at 10:30 AM. I’m sending a calendar invite to your email right now—is it still [Email]? Great. I’m also going to send a quick WhatsApp message to this number so you have my direct line. If anything changes, just let me know. Asante, and have a fantastic week!”
+          </div>
+
+          <div class="whatsapp-dark-box">
+            <span class="info-label" style="color: #10B981; font-weight: bold;">WhatsApp follow-up template (Send within 5 minutes of call):</span>
+            <pre>“Hi [Prospect Name]! This is [Your Name] from Zenti AI. Great speaking with you just now. As promised, I’ve booked our 20-minute automation blueprint call for Thursday at 10:30 AM. Here is the Google Meet link: meet.google.com/xxx-xxxx-xxx. Looking forward to showing you how to put those manual M-Pesa sheets on autopilot! Have a great day. 🇰🇪”</pre>
+          </div>
+        </div>
+
+        <!-- STEP 7 PANEL -->
+        <div class="step-panel" id="step-7">
+          <div class="step-grid-split">
+            
+            <div>
+              <span class="info-label">Pre-Call Audit Checklist:</span>
+              <div class="checklist">
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Locate owner/manager's real first name and check spelling</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Verify primary location in Nairobi (e.g. Westlands, Kilimani)</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Check if they list a Safaricom Till/Paybill number</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Confirm exact industry and pick matching hook statements</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Verify microphone is clear, sit upright, and have water nearby</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Keep Zenti KES pricing structures memorized and ready</span></label>
+                <label class="check-label"><input type="checkbox" onchange="toggleCheck(this)"> <span>Be ready to listen 80% of the time and speak only 20%</span></label>
+              </div>
+            </div>
+
+            <div>
+              <div class="stats-card">
+                <div class="stats-header">
+                  <span class="stats-title">Session Log Tracker</span>
+                  <button class="reset-btn" onclick="resetStats()">Reset Log</button>
+                </div>
+                <div class="stats-grid">
+                  
+                  <div class="counter-box">
+                    <span class="counter-label">Calls Made</span>
+                    <span class="counter-value" id="val-calls">0</span>
+                    <div class="counter-controls">
+                      <button class="ctrl-btn" onclick="addStat('callsMade', -1)">-</button>
+                      <button class="ctrl-btn" onclick="addStat('callsMade', 1)">+</button>
+                    </div>
+                  </div>
+
+                  <div class="counter-box">
+                    <span class="counter-label">Picked Up</span>
+                    <span class="counter-value" id="val-picked">0</span>
+                    <div class="counter-controls">
+                      <button class="ctrl-btn" onclick="addStat('pickedUp', -1)">-</button>
+                      <button class="ctrl-btn" onclick="addStat('pickedUp', 1)">+</button>
+                    </div>
+                  </div>
+
+                  <div class="counter-box">
+                    <span class="counter-label">Interested</span>
+                    <span class="counter-value" id="val-interest">0</span>
+                    <div class="counter-controls">
+                      <button class="ctrl-btn" onclick="addStat('interested', -1)">-</button>
+                      <button class="ctrl-btn" onclick="addStat('interested', 1)">+</button>
+                    </div>
+                  </div>
+
+                  <div class="counter-box featured">
+                    <span class="counter-label" style="color: var(--accent);">Booked ✅</span>
+                    <span class="counter-value" id="val-booked" style="color: var(--accent);">0</span>
+                    <div class="counter-controls">
+                      <button class="ctrl-btn" onclick="addStat('booked', -1)">-</button>
+                      <button class="ctrl-btn" onclick="addStat('booked', 1)" style="color: var(--accent); border-color: var(--accent);">+</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="window-footer">
+        <button class="nav-btn" id="prev-btn" onclick="navigateStep(-1)" disabled>◀ Previous Step</button>
+        <span id="step-indicator-text" style="font-size: 12px; font-weight: bold; color: var(--text-muted); font-family: monospace;">Step 1 of 7</span>
+        <button class="nav-btn next" id="next-btn" onclick="navigateStep(1)">Next Step ▶</button>
+      </div>
+
+    </div>
+
+    <!-- Golden advice box -->
+    <div class="advisory">
+      <div style="font-size: 20px;">💡</div>
+      <div>
+        <strong>The Golden Rule of Phone Closing:</strong> Always close for the <strong>next specific action</strong> (a scheduled Zoom meeting on Thursday/Friday), never try to convince them to purchase or discuss full pricing structures on the very first cold call. Maintain focus on securing the audit.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var currentStep = 1;
+    var completedSteps = [1];
+    var stats = {
+      callsMade: 0,
+      pickedUp: 0,
+      interested: 0,
+      booked: 0
+    };
+
+    // Load stats
+    if (localStorage.getItem('zenti_standalone_stats')) {
+      try {
+        stats = JSON.parse(localStorage.getItem('zenti_standalone_stats'));
+        updateStatsUI();
+      } catch (e) {}
+    }
+
+    var hooks = {
+      clinics: "“We find that many private clinics in Nairobi are losing hours having their front desk manually text patients appointment reminders, manually cross-check doctor calendars, and match M-Pesa receipts for consults. Is that a challenge you guys face at your practice?”",
+      retail: "“We work with retailers who were spending 2 hours every evening manually matching M-Pesa transaction codes from their till SMS inbox with their sales sheets, and copying order details from WhatsApp. Is your team still doing that manual M-Pesa matching every day?”",
+      property: "“We find that real estate and property firms in Kilimani and Westlands are drowned in rent reconciliation. They are matching hundreds of M-Pesa rent payments manually and typing up receipts one by one. Does your team spend days on rent receipt matching every month?”",
+      restaurant: "“Most restaurants we talk to are flooded with WhatsApp reservation inquiries and manual menu requests, which means staff are answering the same 5 questions on their phone instead of serving guests. Is manual customer messaging holding your staff back?”",
+      general: "“We help local companies automate their back-office admin—things like auto-generating invoices, sending client updates on WhatsApp, and matching payments automatically so you save 15+ hours a week. Is eliminating repetitive manual work a priority for you guys this quarter?”"
+    };
+
+    var pitches = {
+      'general-p': "“We don't sell generic software that you have to learn. Instead, we build custom background scripts and WhatsApp bots tailored specifically to your business. We connect your existing tools—like your M-Pesa Paybill, your Google Sheets, and your WhatsApp Business. \n\nFor example, instead of your staff matching M-Pesa codes, our system automatically detects the transaction, updates your spreadsheet in real-time, generates a PDF receipt, and WhatsApps it to the customer instantly. You change absolutely nothing about how you work, and the automation runs 24/7 in the background for KES 15,000 a month.”",
+      'property-p': "“We build a custom rent portal that connects to your Safaricom Paybill. When a tenant pays rent via M-Pesa, our script instantly matches their apartment number, updates your property Google Sheet, creates a rent receipt PDF, and sends it to their WhatsApp number automatically. Your office staff never have to cross-check rent payments again.”",
+      'clinics-p': "“We set up an automated WhatsApp Booking Assistant. When a patient messages your line, they can instantly see doctor availability, book an appointment, and get automated reminders sent to their WhatsApp 2 hours before their slot. If they pay via M-Pesa, the consult payment is reconciled and logged in your system instantly without human error.”",
+      'retail-p': "“We build a WhatsApp Catalog Bot that lets clients browse your products, place orders, and pay directly on WhatsApp. Once M-Pesa confirms the payment, the order details are pushed to your packaging team's Google Sheet, and low stock warnings are sent to you automatically. Your staff never have to copy-paste shipping details manually again.”",
+      'restaurant-p': "“We set up an automated guest bot. Customers scan a QR code on their table to browse the menu, order, and pay. The kitchen gets an automated receipt printed or displayed, and the sales are logged instantly. For room bookings, the bot handles FAQs about check-in times and routes active bookings straight to your sheets.”"
+    };
+
+    function selectHook(id, btn) {
+      document.querySelectorAll('#step-2 .selector-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('hook-quote-text').innerText = hooks[id];
+    }
+
+    function selectPitch(id, btn) {
+      document.querySelectorAll('#step-4 .selector-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pitch-quote-text').innerText = pitches[id];
+    }
+
+    function toggleCollapse(header) {
+      var body = header.nextElementSibling;
+      var arrow = header.querySelector('span');
+      if (body.style.display === 'block') {
+        body.style.display = 'none';
+        arrow.innerText = '▼';
+      } else {
+        body.style.display = 'block';
+        arrow.innerText = '▲';
+      }
+    }
+
+    function toggleCheck(chk) {
+      if (chk.checked) {
+        chk.parentElement.classList.add('checked');
+      } else {
+        chk.parentElement.classList.remove('checked');
+      }
+    }
+
+    function jumpToStep(stepId) {
+      currentStep = stepId;
+      if (!completedSteps.includes(stepId)) {
+        completedSteps.push(stepId);
+      }
+      updateStepUI();
+    }
+
+    function navigateStep(direction) {
+      currentStep += direction;
+      currentStep = Math.max(1, Math.min(7, currentStep));
+      if (!completedSteps.includes(currentStep)) {
+        completedSteps.push(currentStep);
+      }
+      updateStepUI();
+    }
+
+    function updateStepUI() {
+      // Toggle panels
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('step-' + currentStep).classList.add('active');
+
+      // Update progress indicators
+      document.querySelectorAll('.progress-bar .pill').forEach((pill, idx) => {
+        pill.className = 'pill';
+        var sId = idx + 1;
+        if (sId === currentStep) {
+          pill.classList.add('active');
+        } else if (completedSteps.includes(sId)) {
+          pill.classList.add('completed');
+        }
+      });
+
+      // Headers text
+      var titles = ["Opening Script", "The Hook Statement", "Open Discovery Questions", "The Automation Pitch", "Objections Handling", "Closing the Audit Slot", "Pre-call Prep & Logger"];
+      document.getElementById('step-id-badge').innerText = currentStep;
+      document.getElementById('step-title-text').innerText = titles[currentStep - 1];
+      document.getElementById('current-step-label').innerText = "Step " + currentStep + " of 7 — " + titles[currentStep - 1].split(' ')[0];
+      document.getElementById('step-indicator-text').innerText = "Step " + currentStep + " of 7";
+
+      // Buttons active
+      document.getElementById('prev-btn').disabled = (currentStep === 1);
+      document.getElementById('next-btn').disabled = (currentStep === 7);
+    }
+
+    function addStat(key, amt) {
+      stats[key] = Math.max(0, stats[key] + amt);
+      
+      // Keep logical sync
+      if (key === 'callsMade' && stats.callsMade < stats.pickedUp) stats.pickedUp = stats.callsMade;
+      if (key === 'pickedUp') {
+        if (stats.pickedUp > stats.callsMade) stats.callsMade = stats.pickedUp;
+        if (stats.pickedUp < stats.interested) stats.interested = stats.pickedUp;
+      }
+      if (key === 'interested') {
+        if (stats.interested > stats.pickedUp) stats.pickedUp = stats.interested;
+        if (stats.interested < stats.booked) stats.booked = stats.interested;
+      }
+      if (key === 'booked' && stats.booked > stats.interested) {
+        stats.interested = stats.booked;
+      }
+
+      localStorage.setItem('zenti_standalone_stats', JSON.stringify(stats));
+      updateStatsUI();
+    }
+
+    function updateStatsUI() {
+      document.getElementById('val-calls').innerText = stats.callsMade;
+      document.getElementById('val-picked').innerText = stats.pickedUp;
+      document.getElementById('val-interest').innerText = stats.interested;
+      document.getElementById('val-booked').innerText = stats.booked;
+    }
+
+    function resetStats() {
+      if (confirm('Reset calling stats counters for this dial session?')) {
+        stats = { callsMade: 0, pickedUp: 0, interested: 0, booked: 0 };
+        localStorage.setItem('zenti_standalone_stats', JSON.stringify(stats));
+        updateStatsUI();
+      }
+    }
+  </script>
+</body>
+</html>
